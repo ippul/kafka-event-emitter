@@ -2,7 +2,6 @@
 show how propagete task details on a kafka topic
 
 ## build it
-
 ```
 $ mvn clean install
 ```
@@ -15,8 +14,8 @@ cp ./target/lib/* $EAP_HOME/standalone/deployments/kie-server.war/WEB-INF/lib/
 
 ## Create a kafka topic and start a consumer
 ```
-bin/kafka-topics.sh --create --topic task-topic --zookeeper localhost:2181 --partitions 1 --replication-factor 1
-bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic task-topic --from-beginning
+$KAFKA_HOME/bin/kafka-topics.sh --create --topic task-topic --zookeeper localhost:2181 --partitions 1 --replication-factor 1
+$KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic task-topic --from-beginning
 ```
 
 ## Configure EAP
