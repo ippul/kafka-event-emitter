@@ -1,0 +1,73 @@
+# kafka-event-emitter
+show how propagete task details on a kafka topic
+
+## build it
+
+```
+$ mvn clean install
+```
+
+## Install kie-server extension
+```
+cp ./target/kafka-event-emitter-1.0.jar $EAP_HOME/standalone/deployments/kie-server.war/WEB-INF/lib/
+cp ./target/lib/* $EAP_HOME/standalone/deployments/kie-server.war/WEB-INF/lib/
+```
+
+## Create a kafka topic and start a consumer
+```
+bin/kafka-topics.sh --create --topic task-topic --zookeeper localhost:2181 --partitions 1 --replication-factor 1
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic task-topic --from-beginning
+```
+
+## Configure EAP
+Add 2 system property to your eap configuration
+```
+<property name="org.ippul.example.pam.emitter.bootstrap.servers" value="localhost:9092"/>
+<property name="org.ippul.example.pam.emitter.topic.name" value="task-topic"/>
+```
+
+## Trigger it
+Start EAP and execute action on human task
+
+## Result
+In the terminal of the kafka consumer observe something like
+[source,json]
+----
+{
+  "compositeId": "bdd-kie-server_2",
+  "id": 2,
+  "priority": 0,
+  "name": "Task",
+  "subject": "",
+  "description": "",
+  "taskType": null,
+  "formName": "Task",
+  "status": "Ready",
+  "actualOwner": null,
+  "createdBy": null,
+  "createdOn": "2021-02-03T06:32:13.198+0000",
+  "activationTime": "2021-02-03T06:32:13.198+0000",
+  "expirationDate": null,
+  "skipable": false,
+  "workItemId": 2,
+  "processInstanceId": 2,
+  "parentId": -1,
+  "processId": "test-kafka.process-with-ht",
+  "containerId": "test-kafka_1.0.0-SNAPSHOT",
+  "potentialOwners": [
+    "kie-server"
+  ],
+  "excludedOwners": [],
+  "businessAdmins": [
+    "Administrator",
+    "Administrators"
+  ],
+  "inputData": {
+    "Skippable": "false",
+    "TaskName": "Task",
+    "NodeName": "Task",
+    "GroupId": "kie-server"
+  },
+  "outputData": null
+}
+----
